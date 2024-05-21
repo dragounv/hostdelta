@@ -88,6 +88,7 @@ func main() {
 		var maxDelay time.Duration
 		var minDelay time.Duration = time.Duration(1 << 62)
 		var totalDelay time.Duration
+		var averageDelay time.Duration
 
 		for i := 1; i < len(timestamps); i++ {
 			delay := timestamps[i].Sub(timestamps[i-1])
@@ -107,7 +108,11 @@ func main() {
 		fields = append(fields, host)
 		fields = append(fields, fmt.Sprint(maxDelay.Seconds()))
 		fields = append(fields, fmt.Sprint(minDelay.Seconds()))
-		averageDelay := totalDelay/time.Duration(len(timestamps)-1)
+		if len(timestamps) < 2 {
+			averageDelay = 0
+		} else {
+			averageDelay = totalDelay/time.Duration(len(timestamps)-1)
+		}
 		fields = append(fields, fmt.Sprint(averageDelay.Seconds()))
 		numberOfTimestamps := len(timestamps)
 		fields = append(fields, fmt.Sprint(numberOfTimestamps))
